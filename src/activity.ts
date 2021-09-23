@@ -78,8 +78,8 @@ export async function activity(previous: ActivityPayload = {}) {
 		let repo = git.repositories.find((repo) => repo.ui.selected)?.state.remotes[0]?.fetchUrl;
 
 		if (repo) {
-			if (repo.startsWith('git@')) {
-				repo = repo.replace(':', '/').replace('git@', 'https://').replace('.git', '');
+			if (repo.startsWith('git@') || repo.startsWith('ssh://')) {
+				repo = repo.replace('ssh://', '').replace(':', '/').replace('git@', 'https://').replace('.git', '');
 			} else {
 				repo = repo.replace(/(https:\/\/)([^@]*)@(.*?$)/, '$1$3').replace('.git', '');
 			}
@@ -129,8 +129,6 @@ export async function activity(previous: ActivityPayload = {}) {
 
 		log(LogLevel.Trace, `VSCode language id: ${window.activeTextEditor.document.languageId}`);
 	}
-
-	log(LogLevel.Debug, `Discord Presence being sent to discord:\n${JSON.stringify(state, null, 2)}`);
 
 	return state;
 }
